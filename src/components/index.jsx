@@ -9,7 +9,7 @@ import Consultation from "./pages/consultation";
 import Features from "./pages/features";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
-
+import Register from "./pages/register";
 const MainPage = () => {
 
     return (
