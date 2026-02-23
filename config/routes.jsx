@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../src/components/pages/login";
 import PrivateRoute from "../src/global/PrivateRoute";
 import MainPage from "../src/components";
-import Register from "../src/components/pages/register";
+import Register from "../src/components/pages/register";    
 
 const RouteConfig = () => {
 
