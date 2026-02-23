@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import '../styles/login.css';
 import { supabase } from "../../../config/supabase";
 
-const Login = () => {
+const Register = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
@@ -16,16 +17,21 @@ const Login = () => {
         e.preventDefault();
         setError('');
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
 
-        if (error) {
-            setError(error.message);
+        if (password == repeatPassword) {
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                console.log("Error", error.message);
+                setError(error.message);
+            } else {
+                console.log('Utilisateur créé', data);
+            }
         } else {
-            console.log("Connexion réussie");
-            navigate("/dashboard");
+            setError("The passwords are not the same");
         }
 
     }
@@ -33,7 +39,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <form className="login-card" onSubmit={handleSubmit}>
-                <h2>Connexion</h2>
+                <h2>Inscription</h2>
 
                 {error && <p className="error">{error}</p>}
 
@@ -53,14 +59,22 @@ const Login = () => {
                     required
                 />
 
-                <button type="submit">Se connecter</button>
+                <input
+                    type="password"
+                    placeholder="Répéter le mot de passe"
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    required
+                />
+
+                <button type="submit">S'inscrire</button>
 
                 <p className="footer-text">
-                    Pas de compte ? <span> <a href="/register"> Inscription </a></span>
+                    Avez-vous, séja un compte ? <span> <a href="/login"> Connexion </a></span>
                 </p>
             </form>
         </div>
     );
 }
 
-export default Login;
+export default Register;

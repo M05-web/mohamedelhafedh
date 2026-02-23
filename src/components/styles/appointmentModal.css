@@ -28,7 +28,7 @@
             transition: var(--transition);
         }
 
-        .time-slot:hover, .time-slot.selected {
+        .time-slot:hover, .time-slot-selected {
             border-color: var(--primary);
             background: rgba(0, 102, 204, 0.1);
         }

@@ -17,12 +17,12 @@ const MainPage = () => {
             <Header />
             <main>
                 <Hero />
+                <Dashboard />
                 <QuickCategories />
                 <Doctors />
                 <Hospital />
                 <Consultation />
                 <Features />
-                <Dashboard />
             </main>
         </>
     );

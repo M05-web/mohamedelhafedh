@@ -1,25 +1,34 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { auth } from "../../config/firebase";
+import { supabase } from "../../config/supabase";
 import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(undefined);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
 
-        return () => unsubscribe();
-    }, []);
+        supabase.auth.getSession().then(async ({ data }) => {
+            console.log("user", data.session?.user)
+            setUser(data.session?.user ?? null)
+        })
+        
 
-    if (loading) {
-        return <div>Chargement...</div>;
-    }
+        const { data: listener } = supabase.auth.onAuthStateChange(
+            (event, session) => {
+                setUser(session?.user ?? null)
+            }
+        )
+
+        return () => {
+            listener.subscription.unsubscribe()
+        }
+    }, [])
+
+    if(user == undefined)
+        return <p> Chargement ... </p>
 
     return user ? children : <Navigate to="/login" replace />
 }

@@ -2,8 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import '../styles/header.css';
 import '../styles/hero.css';
-import { signOut } from "firebase/auth";
-import { auth } from "../../../config/firebase";
+import { supabase } from "../../../config/supabase";
 
 const Header = () => {
 
@@ -11,7 +10,7 @@ const Header = () => {
 
     const logout = async () => {
         try {
-            await signOut(auth);
+            await supabase.auth.signOut()
             navigate("/login");
             console.log("Déconnecté avec succès");
         } catch(error) {
