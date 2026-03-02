@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 /* import { auth } from "../../../config/firebase"; */
 import '../styles/login.css';
 import { supabase } from "../../../config/supabase";
@@ -22,10 +22,16 @@ const Login = () => {
         });
 
         if (error) {
-            setError(error.message);
+            setError(error.message === "Invalid login credentials" ? "Identifiants de connexion invalides" : error.message);
         } else {
-            console.log("Connexion réussie");
-            navigate("/dashboard");
+            console.log("Connexion réussie", data.user);
+            const role = data.user.user_metadata?.role;
+
+            if (role === 'doctor') {
+                navigate("/doctor-dashboard");
+            } else {
+                navigate("/dashboard");
+            }
         }
 
     }
@@ -56,7 +62,7 @@ const Login = () => {
                 <button type="submit">Se connecter</button>
 
                 <p className="footer-text">
-                    Pas de compte ? <span> <a href="/register"> Inscription </a></span>
+                    Pas de compte ? <span> <Link to="/register"> Inscription </Link></span>
                 </p>
             </form>
         </div>
