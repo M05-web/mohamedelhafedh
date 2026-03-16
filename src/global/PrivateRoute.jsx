@@ -1,36 +1,40 @@
-import { onAuthStateChanged } from "firebase/auth";
-import React, { useEffect, useState } from "react";
-import { supabase } from "../../config/supabase";
+import React from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { Spin } from "antd";
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, requiredRoles = [] }) => {
+    const { user, role, loading } = useAuth();
 
-    const [user, setUser] = useState(undefined);
-    const [loading, setLoading] = useState(true);
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f8fafc' }}>
+                <Spin size="large" tip="Vérification des accès..." />
+            </div>
+        );
+    }
 
-    useEffect(() => {
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
-        supabase.auth.getSession().then(async ({ data }) => {
-            console.log("user", data.session?.user)
-            setUser(data.session?.user ?? null)
-        })
+    if (requiredRoles.length > 0 && !requiredRoles.includes(role)) {
+        console.log("PrivateRoute: Role mismatch", { currentRole: role, required: requiredRoles });
         
-
-        const { data: listener } = supabase.auth.onAuthStateChange(
-            (event, session) => {
-                setUser(session?.user ?? null)
-            }
-        )
-
-        return () => {
-            listener.subscription.unsubscribe()
+        // If logged in but NO profile/role found in DB
+        if (!role) {
+            console.warn("PrivateRoute: No role found. Accessing as patient by default.");
+            if (requiredRoles.includes('patient')) return children;
+            return <Navigate to="/dashboard" replace />;
         }
-    }, [])
 
-    if(user == undefined)
-        return <p> Chargement ... </p>
+        if (role === 'doctor') return <Navigate to="/doctor-dashboard" replace />;
+        if (role === 'admin') return <Navigate to="/admin-dashboard" replace />;
+        
+        return <Navigate to="/dashboard" replace />;
+    }
 
-    return user ? children : <Navigate to="/login" replace />
+    return children;
 }
 
 export default PrivateRoute;

@@ -1,66 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
 :root {
-            --primary: #0066cc;
-            --primary-dark: #0052a3;
-            --secondary: #28a745;
-            --accent: #4fc3f7;
-            --dark: #003366;
-            --light: #f8fafc;
-            --gray: #666;
-            --white: #ffffff;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
+    /* Responsive Layout Variables */
+    --sidebar-width: 280px;
+    --header-height: 70px;
+    
+    /* Sophisticated HSL Color Palette */
+    --primary-h: 221;
+    --primary-s: 83%;
+    --primary-l: 53%;
+    --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    --primary-dark: hsl(var(--primary-h), var(--primary-s), 40%);
+    --primary-light: hsl(var(--primary-h), var(--primary-s), 95%);
+    
+    --secondary-h: 160;
+    --secondary-s: 84%;
+    --secondary-l: 39%;
+    --secondary: hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+    
+    --accent: #f59e0b;
+    --bg-main: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    
+    /* Glassmorphism Tokens */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-blur: blur(12px);
+    
+    /* Shadows & Transitions */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            color: #333;
-            line-height: 1.6;
-            background-color: var(--light);
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
 
-         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .nav-links {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .search-box {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            .doctor-details {
-                flex-direction: column;
-                text-align: center;
-            }
-            .modal-content {
-                padding: 30px 20px;
-            }
-            .consultation-types {
-                flex-direction: column;
-            }
-            .video-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            .video-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+h1, h2, h3, h4, .premium-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Base Layout */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Professional Buttons */
+.btn-premium {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1025px) {
+    .sidebar-desktop { display: none !important; }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 1rem; }
+    h1 { font-size: 2rem !important; }
+    
+    .mobile-only { display: block !important; }
+    .desktop-only { display: none !important; }
+    
+    .p-mobile-0 { padding: 0 !important; }
+    .m-mobile-0 { margin: 0 !important; }
+    .hidden-mobile { display: none !important; }
+}
+
+@media (min-width: 769px) {
+    .mobile-only { display: none !important; }
+}

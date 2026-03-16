@@ -1,158 +1,226 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown, Button } from "antd";
-import { DownOutlined, EllipsisOutlined, UserOutlined } from '@ant-design/icons';
+import { Modal, Button, DatePicker, Select, Input, Divider, message, Row, Col } from "antd";
+import { CalendarOutlined, ClockCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { supabase } from "../../../config/supabase";
-import '../styles/appointmentModal.css';
-import '../styles/modalSystem.css';
-import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
+import dayjs from 'dayjs';
 
-const timeSlotList = [
-    "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"
-];
+const { Option } = Select;
+const { TextArea } = Input;
 
+const AppointmentModal = ({ selectedDoctorId, closeModal }) => {
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [doctorInfo, setDoctorInfo] = useState(null);
+    const [specialties, setSpecialties] = useState([]);
+    const [selectedSpecialtyId, setSelectedSpecialtyId] = useState(null);
+    const [availableDoctors, setAvailableDoctors] = useState([]);
+    const [currentDoctorId, setCurrentDoctorId] = useState(selectedDoctorId);
+    
+    const [date, setDate] = useState(null);
+    const [time, setTime] = useState(null);
+    const [reason, setReason] = useState("");
 
-
-const AppointmentModal = ({ closeModal }) => {
-
-    const [timeSlotSelected, setTimeSlotSelected] = useState(false);
-    const [appointmentDate, setAppointmentDate] = useState("");
-    const [consultationReason, setConsultationReason] = useState("");
-    const [selectedDoctor, setSelectedDoctor] = useState(null);
-    const [selectedDoctorLabel, setSelectedDoctorLabel] =useState(null);
-    const [items, setItems] = useState([]);
-    const [user, setUser] = useState(null);
+    const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
 
     useEffect(() => {
-
-        supabase.auth.getSession().then(async ({ data }) => {
-            console.log("user", data.session?.user)
-            setUser(data.session?.user ?? null)
-        })
-
-
-        const { data: listener } = supabase.auth.onAuthStateChange(
-            (event, session) => {
-                setUser(session?.user ?? null)
-            }
-        )
-
-        return () => {
-            listener.subscription.unsubscribe()
+        fetchSpecialties();
+        if (selectedDoctorId) {
+            fetchDoctorInfo(selectedDoctorId);
+            setCurrentDoctorId(selectedDoctorId);
         }
-    }, []);
+    }, [selectedDoctorId]);
 
-    const confirmAppointment = async () => {
-        const appointment = {
-            'patient_id': user.id,
-            'doctor_id': selectedDoctor,
-            'appointment_date': appointmentDate,
-            'appointment_time': timeSlotSelected,
-            'reason': consultationReason
+    useEffect(() => {
+        if (selectedSpecialtyId) {
+            fetchDoctorsBySpecialty(selectedSpecialtyId);
         }
+    }, [selectedSpecialtyId]);
 
+    const fetchSpecialties = async () => {
+        const { data, error } = await supabase.from('specialties').select('*').order('name');
+        if (data) setSpecialties(data);
+    };
+
+    const fetchDoctorsBySpecialty = async (specialtyId) => {
         const { data, error } = await supabase
-            .from("appointments")
-            .insert(appointment);
+            .from('doctors')
+            .select('id, profiles:user_id(full_name)')
+            .eq('specialty_id', specialtyId);
+        
+        if (data) setAvailableDoctors(data);
+    };
 
-        console.log("Appointment Data ", data);
+    const fetchDoctorInfo = async (id) => {
+        const { data, error } = await supabase
+            .from('doctors')
+            .select('*, profiles:user_id(full_name), specialties:specialty_id(name)')
+            .eq('id', id)
+            .single();
+        
+        if (data) setDoctorInfo(data);
+    };
 
-        if (error) {
-            console.error("Error while creating Appointment", error);
-            toast.error("Erreur lors de la création !");
-            closeModal();
-        } else {
-            closeModal();
-            toast.success("Rendez-vous créé avec succès !")
+    const handleBooking = async () => {
+        if (!date || !time || !currentDoctorId) {
+            message.warning("Veuillez remplir tous les champs obligatoires (médecin, date, heure).");
+            return;
         }
-    }
 
+        setLoading(true);
+        try {
+            const formattedDate = date.format('YYYY-MM-DD');
+            
+            const { data: existing, error: checkError } = await supabase
+                .from('appointments')
+                .select('id')
+                .eq('doctor_id', currentDoctorId)
+                .eq('appointment_date', formattedDate)
+                .eq('appointment_time', time)
+                .neq('status', 'cancelled');
 
-
-    const handleMenuClick = e => {
-       const item = items.find((element) => element.key == e.key);
-       item ? setSelectedDoctorLabel(item.label) : null;
-        setSelectedDoctor(e.key);
-    };
-
-    const menuProps = {
-        items,
-        onClick: handleMenuClick
-    };
-
-    useEffect(() => {
-        const fetchDoctors = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("doctors")
-                    .select("*");
-
-                if (error) throw error;
-                console.log("Doctors List", data);
-
-                data.map((doctor, i) => {
-                    let doctorItem = {
-                        "label": doctor.name + " - " + doctor.specialty,
-                        "key": doctor.id
-                    }
-                    if (!(items.find((element) => element.key == doctorItem.key)))
-                        items.push(doctorItem);
-                })
-
-
-            } catch (err) {
-                console.error("Erreur Supabase", err);
+            if (existing && existing.length > 0) {
+                throw new Error("Ce créneau est déjà réservé. Veuillez en choisir un autre.");
             }
-        };
 
-        fetchDoctors();
-    }, []);
+            // 2. Fetch Patient ID
+            const { data: patientData } = await supabase
+                .from('patients')
+                .select('id')
+                .eq('user_id', user.id)
+                .single();
+
+            if (!patientData) throw new Error("Profil patient non trouvé.");
+
+            // 3. Insert Appointment
+            const { error: insertError } = await supabase
+                .from('appointments')
+                .insert({
+                    patient_id: patientData.id,
+                    doctor_id: currentDoctorId,
+                    appointment_date: formattedDate,
+                    appointment_time: time,
+                    reason: reason,
+                    status: 'pending'
+                });
+
+            if (insertError) throw insertError;
+
+            message.success("Demande de rendez-vous envoyée avec succès !");
+            closeModal();
+        } catch (err) {
+            message.error(err.message || "Erreur lors de la réservation.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div id="appointmentModal">
-            <div className="modal-content">
-                <h2 className="modal-title">Prendre un rendez-vous</h2>
-                <div id="appointmentDoctorInfo"></div>
-                <div id="appointmentForm">
-                    <div className="form-group">
-                        <label for="appointmentDate">Date souhaitée</label>
-                        <table className="calendar">
-                            <tr>
-                                <th>Lu</th><th>Ma</th><th>Me</th><th>Je</th><th>Ve</th><th>Sa</th><th>Di</th>
-                            </tr>
-                            <tr>
-                                <td className="available-day">15</td><td className="available-day">16</td><td>17</td>
-                                <td className="available-day">18</td><td className="available-day">19</td><td>20</td><td>21</td>
-                            </tr>
-                        </table>
-                        <input type="date" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} required />
-                    </div>
-                    <div className="form-group">
-                        <label>Heure</label>
-                        <div className="time-slots">
-                            {
-                                timeSlotList.map((timeSlot, i) => {
-                                    return <div className={`time-slot ${timeSlotSelected == timeSlot ? 'time-slot-selected' : ''}`} data-time={timeSlot} onClick={(e) => { setTimeSlotSelected(e.currentTarget.dataset.time) }}
-                                    >{timeSlot}
-                                    </div>
-                                })
-                            }
+        <div style={{ padding: '10px' }}>
+            <h3 style={{ marginBottom: '25px', color: '#1a365d', fontFamily: 'Outfit', fontWeight: '800', fontSize: '1.5rem' }}>
+                {doctorInfo ? `Rendez-vous avec Dr. ${doctorInfo.profiles.full_name}` : 'Nouveau Rendez-vous'}
+            </h3>
+            
+            {!selectedDoctorId && (
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <div style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#475569' }}>Spécialité</label>
+                            <Select 
+                                placeholder="Choisir spécialité" 
+                                style={{ width: '100%' }} 
+                                size="large"
+                                onChange={(val) => {
+                                    setSelectedSpecialtyId(val);
+                                    setCurrentDoctorId(null);
+                                    setDoctorInfo(null);
+                                }}
+                            >
+                                {specialties.map(s => (
+                                    <Option key={s.id} value={s.id}>{s.name}</Option>
+                                ))}
+                            </Select>
                         </div>
-                        <input type="hidden" value="appointmentTime" required />
-                    </div>
-                    <Dropdown menu={menuProps}>
-                        <Button icon={<DownOutlined />} iconPlacement="end" size="large">
-                            { selectedDoctorLabel != null ? selectedDoctorLabel : 'Sélectionner un docteur'}
-                        </Button>
-                    </Dropdown>
-                    <div className="form-group">
-                        <label for="appointmentReason">Motif de consultation</label>
-                        <textarea id="appointmentReason" rows="3" placeholder="Décrivez brièvement le motif de votre consultation" onChange={(e) => setConsultationReason(e.target.value)}></textarea>
-                    </div>
-                    <button className="modal-btn" onClick={confirmAppointment}>Confirmer le rendez-vous</button>
+                    </Col>
+                    <Col span={12}>
+                        <div style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#475569' }}>Médecin</label>
+                            <Select 
+                                placeholder="Choisir médecin" 
+                                style={{ width: '100%' }} 
+                                size="large"
+                                disabled={!selectedSpecialtyId}
+                                value={currentDoctorId}
+                                onChange={(val) => {
+                                    setCurrentDoctorId(val);
+                                    fetchDoctorInfo(val);
+                                }}
+                            >
+                                {availableDoctors.map(d => (
+                                    <Option key={d.id} value={d.id}>{d.profiles.full_name}</Option>
+                                ))}
+                            </Select>
+                        </div>
+                    </Col>
+                </Row>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#475569' }}>Date souhaitée</label>
+                    <DatePicker 
+                        style={{ width: '100%' }} 
+                        size="large" 
+                        disabledDate={(current) => current && current < dayjs().endOf('day')}
+                        onChange={(val) => setDate(val)}
+                        placeholder="Sélectionner"
+                    />
+                </div>
+
+                <div>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#475569' }}>Heure</label>
+                    <Select 
+                        placeholder="Créneau" 
+                        style={{ width: '100%' }} 
+                        size="large"
+                        onChange={(val) => setTime(val)}
+                    >
+                        {timeSlots.map(slot => (
+                            <Option key={slot} value={slot}>{slot}</Option>
+                        ))}
+                    </Select>
                 </div>
             </div>
+
+            <div style={{ marginBottom: '25px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#475569' }}>Motif de consultation</label>
+                <TextArea 
+                    rows={3} 
+                    placeholder="Quels sont vos symptômes ?" 
+                    style={{ borderRadius: '12px', padding: '12px' }}
+                    onChange={(e) => setReason(e.target.value)}
+                />
+            </div>
+
+            <div style={{ background: '#eff6ff', padding: '15px', borderRadius: '10px', marginBottom: '25px' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#1e40af' }}>
+                    <InfoCircleOutlined style={{ marginRight: '8px' }} />
+                    Votre demande sera envoyée au médecin pour confirmation. Vous recevrez une notification dès qu'elle sera validée.
+                </p>
+            </div>
+
+            <Button 
+                type="primary" 
+                block 
+                size="large" 
+                loading={loading}
+                onClick={handleBooking}
+                style={{ height: '50px', borderRadius: '12px', background: '#2563eb' }}
+            >
+                Confirmer la réservation
+            </Button>
         </div>
     );
-}
+};
 
-export default AppointmentModal;
+export default AppointmentModal;

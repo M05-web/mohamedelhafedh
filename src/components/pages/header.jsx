@@ -18,25 +18,28 @@ const Header = () => {
         }
     }
 
-    return(
-        <header>
-        <div className="container nav-container">
-            <a href="#" class="logo">
-                <i className="fas fa-stethoscope"></i> WerGui Sénégal
-            </a>
-            <ul class="nav-links">
-                <li><a href="#" className="active">Accueil</a></li>
-                <li><a href="#doctors">Médecins</a></li>
-                <li><a href="#hospitals">Hôpitaux</a></li>
-                <li><a href="#categories">Spécialités</a></li>
-                <li><a href="#features">Services</a></li>
-            </ul>
-            <div class="nav-buttons">
-                {/* <button id="loginBtn" className="btn btn-login">Connexion</button> */}
-                <button id="signupBtn" className="btn btn-signup" onClick={logout}>Se déconnecter</button>
+    return (
+        <header className="glass-nav">
+            <div className="container nav-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '80px' }}>
+                <a href="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'var(--primary)', fontSize: '1.5rem', fontWeight: '800', fontFamily: 'Outfit' }}>
+                    <img src="/medical-logo.svg" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+                    <span>WerguiYaram <span style={{ color: 'var(--text-main)' }}>Sénégal</span></span>
+                </a>
+                
+                <ul className="nav-links" style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
+                    <li><a href="/" style={{ textDecoration: 'none', color: 'var(--primary)', fontWeight: '600' }}>Accueil</a></li>
+                    <li><a href="#doctors" style={{ textDecoration: 'none', color: 'var(--text-muted)', fontWeight: '500' }}>Médecins</a></li>
+                    <li><a href="#hospitals" style={{ textDecoration: 'none', color: 'var(--text-muted)', fontWeight: '500' }}>Hôpitaux</a></li>
+                    <li><a href="#categories" style={{ textDecoration: 'none', color: 'var(--text-muted)', fontWeight: '500' }}>Spécialités</a></li>
+                </ul>
+
+                <div className="nav-buttons">
+                    <button className="btn-premium btn-primary" onClick={logout}>
+                        Déconnexion
+                    </button>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
     );
 }
 

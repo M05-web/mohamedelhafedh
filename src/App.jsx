@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import MainPage from './components';
 import RouteConfig from '../config/routes';
+import './components/styles/index.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <RouteConfig />

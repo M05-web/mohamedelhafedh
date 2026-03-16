@@ -66,17 +66,26 @@ const Hospital = () => {
         if(loading) return <p> Chargement ... </p>
 
     return (
-        <section id="hospitals" class="hospitals-section">
-            <div class="container">
-                <h2 class="section-title">Hôpitaux et Cliniques à Dakar</h2>
-                <div class="hospitals-grid" id="hospitalsList">
-                    {/* <!-- Hospitals will be loaded by JavaScript --> */}
-                    {
-                        hospitals.map((hospital, i) => {
-                            return <HospitalComponent hospital={hospital}/>
-                        })
-                    }
+        <section id="hospitals" style={{ padding: '6rem 0', background: 'white' }}>
+            <div className="container">
+                <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                    <span style={{ color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem' }}>Établissements</span>
+                    <h2 style={{ fontSize: '2.5rem', marginTop: '0.5rem', color: '#1e293b' }}>Hôpitaux et Cliniques à Dakar</h2>
+                    <p style={{ color: 'var(--text-muted)', marginTop: '1rem', fontSize: '1.1rem' }}>Les meilleurs établissements de santé sélectionnés pour vous.</p>
                 </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2.5rem' }}>
+                    {hospitals.map((hospital, i) => (
+                        <HospitalComponent key={hospital.id || i} hospital={hospital}/>
+                    ))}
+                </div>
+                
+                {hospitals.length === 0 && !loading && (
+                    <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: '20px', border: '2px dashed #e2e8f0' }}>
+                        <i className="fas fa-hospital-alt" style={{ fontSize: '3rem', color: '#cbd5e1', marginBottom: '1rem', display: 'block' }}></i>
+                        <p style={{ color: '#94a3b8' }}>Aucun établissement trouvé pour le moment.</p>
+                    </div>
+                )}
             </div>
         </section>
     );
