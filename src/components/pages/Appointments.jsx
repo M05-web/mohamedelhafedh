@@ -221,7 +221,7 @@ const Appointments = () => {
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
-                width={700}
+                width="min(700px, 95vw)"
                 centered
                 bodyStyle={{ padding: '0' }}
                 destroyOnClose

@@ -97,7 +97,7 @@ const Dashboard = () => {
                     `}
                 </style>
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                    <div className="header-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div className="header-actions dash-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
                         <div>
                             <Tag color="cyan" style={{ borderRadius: '20px', padding: '2px 12px', marginBottom: '1rem', border: 'none', fontWeight: '700' }}>
                                 <SafetyCertificateOutlined style={{ marginRight: '6px' }} /> PLATEFORME SÉCURISÉE
@@ -365,7 +365,7 @@ const Dashboard = () => {
                 open={appointmentModalOpen}
                 onCancel={() => setAppointmentModalOpen(false)}
                 footer={null}
-                width={600}
+                width="min(600px, 95vw)"
                 centered
                 bodyStyle={{ padding: '0' }}
                 closeIcon={null}

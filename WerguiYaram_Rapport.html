@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WerguiYaram — Rapport de Projet</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #1a202c;
+    background: #f0f4f8;
+  }
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 0 40px rgba(0,0,0,0.12);
+  }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 26px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(29,78,216,0.45);
+    z-index: 9999;
+    letter-spacing: 0.5px;
+  }
+  .print-btn:hover { transform: translateY(-2px); }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(150deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 70px 50px;
+    page-break-after: always;
+  }
+  .cover-logo {
+    width: 100px; height: 100px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.25);
+    font-size: 52px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 36px;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 40px;
+    padding: 8px 24px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: inline-block;
+    opacity: 0.85;
+  }
+  .cover h1 { font-size: 3.8rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
+  .cover-sub { font-size: 1.2rem; opacity: 0.65; font-weight: 300; margin-bottom: 60px; }
+  .cover-meta {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px; width: 100%; max-width: 680px;
+  }
+  .cover-meta-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .cover-meta-label { font-size: 10px; opacity: 0.45; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .cover-meta-value { font-size: 1rem; font-weight: 700; }
+  .cover-line { width: 80px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; margin: 28px auto; }
+
+  /* ── BODY CONTENT ── */
+  .content { padding: 50px 55px; }
+
+  /* ── SECTION ── */
+  .section { margin-top: 52px; }
+  .section-title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #1a365d;
+    border-bottom: 3px solid #3b82f6;
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-icon {
+    background: #eff6ff; color: #1d4ed8;
+    border-radius: 10px; padding: 6px 10px;
+    font-size: 1.1rem;
+  }
+  .sub-title {
+    font-size: 1.05rem; font-weight: 700; color: #2d3748;
+    margin: 28px 0 12px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  p { color: #4a5568; margin-bottom: 10px; }
+
+  /* ── CARDS ── */
+  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-blue { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-green { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-red { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-orange { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ── STAT BOX ── */
+  .stat-box {
+    background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+    padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .stat-num { font-size: 2.4rem; font-weight: 900; color: #1d4ed8; display: block; line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+  /* ── TAGS ── */
+  .tag { display: inline-block; background: #dbeafe; color: #1d4ed8; border-radius: 20px; padding: 2px 11px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-green { display: inline-block; background: #dcfce7; color: #15803d; border-radius: 20px; padding: 2px 11px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-red { display: inline-block; background: #fee2e2; color: #b91c1c; border-radius: 20px; padding: 2px 11px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-orange { display: inline-block; background: #ffedd5; color: #c2410c; border-radius: 20px; padding: 2px 11px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-purple { display: inline-block; background: #f5f3ff; color: #7c3aed; border-radius: 20px; padding: 2px 11px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12.5px; }
+  th { background: #1e3a8a; color: white; padding: 10px 14px; text-align: left; font-weight: 700; font-size: 12px; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  code { font-family: 'Consolas', 'Monaco', monospace; font-size: 11.5px; color: #1d4ed8; background: #eff6ff; padding: 1px 5px; border-radius: 4px; }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: #0f172a; color: #e2e8f0;
+    border-radius: 10px; padding: 18px 20px;
+    font-size: 11.5px; font-family: 'Consolas', 'Monaco', monospace;
+    margin-bottom: 16px; overflow-x: auto; line-height: 1.6;
+    white-space: pre;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 2px; background: linear-gradient(90deg, #3b82f6, transparent); border: none; margin: 48px 0; }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px dashed #e2e8f0; color: #4a5568;
+  }
+  .toc-num { color: #1d4ed8; font-weight: 700; margin-right: 12px; }
+  .toc-page { color: #94a3b8; font-size: 12px; }
+
+  /* ── ISSUE CARD ── */
+  .issue-card {
+    border-left: 4px solid; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;
+  }
+  .issue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .issue-badge { color: white; border-radius: 20px; padding: 2px 12px; font-size: 11px; font-weight: 700; }
+
+  /* ── ROLE HEADER ── */
+  .role-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .role-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  .footer { margin-top: 60px; padding-top: 24px; border-top: 2px solid #e2e8f0; text-align: center; color: #94a3b8; font-size: 12px; padding-bottom: 40px; }
+  .footer-logo { display: flex; justify-content: center; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .footer-icon { width: 36px; height: 36px; border-radius: 8px; background: #1e3a8a; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+
+  /* ── PAGE BREAK ── */
+  .pb { page-break-before: always; padding-top: 20px; }
+
+  ul { padding-left: 22px; color: #4a5568; }
+  ul li { margin-bottom: 6px; }
+
+  /* ── PRINT ── */
+  @media print {
+    .print-btn { display: none !important; }
+    body { background: white; }
+    .page-wrapper { box-shadow: none; }
+    .cover { page-break-after: always; }
+    pre { white-space: pre-wrap; word-break: break-all; }
+    .pb { page-break-before: always; }
+    @page { margin: 18mm 15mm; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Enregistrer en PDF</button>
+
+<div class="page-wrapper">
+
+  <!-- ══════════════════ COVER ══════════════════ -->
+  <div class="cover">
+    <div class="cover-logo">🏥</div>
+    <div class="cover-badge">Rapport Technique de Projet</div>
+    <h1>WerguiYaram</h1>
+    <p class="cover-sub">Plateforme Médicale Intelligente — Sénégal</p>
+    <div class="cover-line"></div>
+    <p style="opacity:0.5;font-size:0.9rem;margin-bottom:40px;">
+      Gestion des rendez-vous médicaux · Suivi patients · Administration hospitalière
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Version</div>
+        <div class="cover-meta-value">1.0.0 — Présentation</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Date</div>
+        <div class="cover-meta-value">16 Mars 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Stack</div>
+        <div class="cover-meta-value">React + Supabase</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BODY ══════════════════ -->
+  <div class="content">
+
+    <!-- TABLE DES MATIÈRES -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">📋</span> Table des Matières</div>
+      <div class="toc-row"><span><span class="toc-num">1.</span>Vue d'ensemble du projet</span><span class="toc-page">3</span></div>
+      <div class="toc-row"><span><span class="toc-num">2.</span>Architecture technique</span><span class="toc-page">4</span></div>
+      <div class="toc-row"><span><span class="toc-num">3.</span>Stack technologique</span><span class="toc-page">5</span></div>
+      <div class="toc-row"><span><span class="toc-num">4.</span>Structure de la base de données</span><span class="toc-page">6</span></div>
+      <div class="toc-row"><span><span class="toc-num">5.</span>Fonctionnalités par rôle</span><span class="toc-page">8</span></div>
+      <div class="toc-row"><span><span class="toc-num">6.</span>Pages et routes de l'application</span><span class="toc-page">11</span></div>
+      <div class="toc-row"><span><span class="toc-num">7.</span>Sécurité et authentification</span><span class="toc-page">12</span></div>
+      <div class="toc-row"><span><span class="toc-num">8.</span>Problèmes résolus &amp; décisions techniques</span><span class="toc-page">13</span></div>
+      <div class="toc-row"><span><span class="toc-num">9.</span>Schéma des flux utilisateur</span><span class="toc-page">15</span></div>
+      <div class="toc-row"><span><span class="toc-num">10.</span>Déploiement et configuration</span><span class="toc-page">16</span></div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 1. VUE D'ENSEMBLE -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">🌍</span> 1. Vue d'ensemble du projet</div>
+
+      <div class="card-blue">
+        <p style="color:#1e40af;font-style:italic;font-size:1.05rem;margin:0;">
+          <strong>WerguiYaram</strong> (« prends soin de ta santé » en Wolof) est une plateforme web médicale complète
+          destinée au marché sénégalais. Elle connecte patients, médecins et administrateurs hospitaliers sur une
+          interface unifiée, moderne et sécurisée.
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin-top:24px;">
+        <div class="stat-box"><span class="stat-num">3</span><span class="stat-label">Rôles Utilisateurs</span></div>
+        <div class="stat-box"><span class="stat-num">25+</span><span class="stat-label">Pages &amp; Composants</span></div>
+        <div class="stat-box"><span class="stat-num">8</span><span class="stat-label">Tables Supabase</span></div>
+        <div class="stat-box"><span class="stat-num">17</span><span class="stat-label">Routes Protégées</span></div>
+        <div class="stat-box"><span class="stat-num">10</span><span class="stat-label">Spécialités Médicales</span></div>
+        <div class="stat-box"><span class="stat-num">100%</span><span class="stat-label">RLS Sécurisé</span></div>
+      </div>
+
+      <div class="sub-title">Objectifs principaux</div>
+      <div class="grid-2">
+        <div class="card">
+          <strong style="color:#1d4ed8">Pour les Patients</strong>
+          <ul style="margin-top:8px;">
+            <li>Trouver et réserver un médecin en ligne</li>
+            <li>Gérer ses rendez-vous et leur historique</li>
+            <li>Consulter et modifier son profil médical</li>
+            <li>Voir la liste de ses médecins suivis</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong style="color:#15803d">Pour les Médecins</strong>
+          <ul style="margin-top:8px;">
+            <li>Gérer son agenda et ses disponibilités</li>
+            <li>Confirmer ou rejeter des rendez-vous</li>
+            <li>Consulter la liste et les dossiers patients</li>
+            <li>Rédiger et archiver ses consultations</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong style="color:#dc2626">Pour les Admins</strong>
+          <ul style="margin-top:8px;">
+            <li>Tableau de bord avec statistiques globales</li>
+            <li>Gestion des utilisateurs (patients, médecins)</li>
+            <li>Gestion des spécialités médicales</li>
+            <li>Supervision de tous les rendez-vous</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong style="color:#7c3aed">Technique</strong>
+          <ul style="margin-top:8px;">
+            <li>Authentification sécurisée (Supabase Auth)</li>
+            <li>Row Level Security (RLS) sur toutes les tables</li>
+            <li>Déploiement Vercel avec routes SPA</li>
+            <li>Interface responsive desktop + mobile</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 2. ARCHITECTURE -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">🏗️</span> 2. Architecture Technique</div>
+
+<pre>
+┌─────────────────────────────────────────────────────────────┐
+│                   FRONTEND (Vercel CDN)                      │
+│                                                             │
+│  React 19 + Vite ──► React Router v7 ──► Ant Design UI     │
+│                                                             │
+│  [Login/Register] ──► [PrivateRoute] ──► [DashboardLayout]  │
+│                              │                              │
+│         ┌────────────────────┼──────────────────┐          │
+│         ▼                    ▼                  ▼           │
+│   [Patient Portal]  [Doctor Dashboard]  [Admin Console]     │
+└─────────────────────────────┬───────────────────────────────┘
+                              │  HTTPS / REST / Realtime
+┌─────────────────────────────▼───────────────────────────────┐
+│                      SUPABASE (BaaS)                        │
+│                                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐   │
+│  │ Auth Service  │  │  PostgreSQL  │  │    Storage     │   │
+│  │ (JWT tokens)  │  │  (8 tables)  │  │  (documents)   │   │
+│  └──────────────┘  └──────┬───────┘  └────────────────┘   │
+│                            │                                │
+│             ┌──────────────▼──────────────┐                │
+│             │  Row Level Security (RLS)    │                │
+│             │  + SECURITY DEFINER Triggers │                │
+│             └─────────────────────────────┘                │
+└─────────────────────────────────────────────────────────────┘
+</pre>
+
+      <div class="sub-title">Flux d'authentification</div>
+<pre>
+User Login
+    │
+    ▼
+supabase.auth.signInWithPassword(email, password)
+    │
+    ▼
+SecurityService.getUserRole(user)
+    │  → Cherche dans auth.users.user_metadata.role
+    │  → Fallback: cherche dans table profiles
+    │
+    ├── role === 'patient'  → navigate('/dashboard')
+    ├── role === 'doctor'   → navigate('/doctor-dashboard')
+    └── role === 'admin'    → navigate('/admin-dashboard')
+</pre>
+
+      <div class="sub-title">Flux d'inscription</div>
+<pre>
+User Register
+    │
+    ▼
+supabase.auth.signUp({ email, password, data: { role, full_name } })
+    │
+    ├── Trigger PostgreSQL: handle_new_user() [SECURITY DEFINER]
+    │       → INSERT INTO profiles (id, full_name, email, role)
+    │       → IF role='patient': INSERT INTO patients (user_id)
+    │       → IF role='doctor':  INSERT INTO doctors (user_id)
+    │
+    └── Frontend (si session disponible): upsert manuel de sécurité
+            → Évite tout timeout si le trigger est lent
+</pre>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 3. STACK -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">⚙️</span> 3. Stack Technologique</div>
+
+      <table>
+        <thead><tr><th>Technologie</th><th>Version</th><th>Rôle dans le projet</th></tr></thead>
+        <tbody>
+          <tr><td><strong>React</strong></td><td><span class="tag">19.x</span></td><td>Framework UI — composants, hooks, gestion d'état local</td></tr>
+          <tr><td><strong>Vite</strong></td><td><span class="tag">6.x</span></td><td>Build tool ultra-rapide, HMR, bundling optimisé</td></tr>
+          <tr><td><strong>React Router DOM</strong></td><td><span class="tag">v7</span></td><td>Routing SPA, routes protégées, navigation programmée</td></tr>
+          <tr><td><strong>Ant Design (antd)</strong></td><td><span class="tag">5.x</span></td><td>Bibliothèque UI — Table, Form, Modal, Card, Input, Avatar...</td></tr>
+          <tr><td><strong>Supabase</strong></td><td><span class="tag">latest</span></td><td>BaaS: Auth JWT, PostgreSQL, RLS, Storage, Realtime</td></tr>
+          <tr><td><strong>dayjs</strong></td><td><span class="tag">1.x</span></td><td>Formatage de dates léger (remplace moment.js)</td></tr>
+          <tr><td><strong>@ant-design/icons</strong></td><td><span class="tag">5.x</span></td><td>Icônes vectorielles pour toute l'interface</td></tr>
+          <tr><td><strong>Vercel</strong></td><td><span class="tag">—</span></td><td>Déploiement cloud, CDN global, réécriture routes SPA</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">Structure des fichiers clés</div>
+<pre>
+mohamedelhafedh/
+├── config/
+│   ├── routes.jsx           ← Configuration centralisée de toutes les routes
+│   └── supabase.jsx         ← Client Supabase (clé anon + URL)
+├── public/
+│   └── medical-logo.svg     ← Logo WerguiYaram
+├── src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   └── PasswordInput.jsx      ← Input mot de passe avec toggle visibilité
+│   │   ├── pages/
+│   │   │   ├── login.jsx              ← Connexion patient/médecin
+│   │   │   ├── register.jsx           ← Inscription avec rôle + hôpital
+│   │   │   ├── adminLogin.jsx         ← Portail admin sécurisé (thème rouge)
+│   │   │   ├── adminRegister.jsx      ← Création compte admin (code secret)
+│   │   │   ├── adminDashboard.jsx     ← Console admin 8 onglets
+│   │   │   ├── PatientPortal.jsx      ← Dashboard patient
+│   │   │   ├── Appointments.jsx       ← Gestion rendez-vous patient
+│   │   │   ├── MyDoctors.jsx          ← Médecins suivis par le patient
+│   │   │   ├── PatientProfile.jsx     ← Profil patient
+│   │   │   ├── PatientHistory.jsx     ← Historique médical
+│   │   │   ├── doctorDashboard.jsx    ← Dashboard médecin
+│   │   │   ├── DoctorSchedule.jsx     ← Agenda médecin
+│   │   │   ├── DoctorPatients.jsx     ← Liste patients du médecin
+│   │   │   ├── PatientDetails.jsx     ← Dossier détaillé d'un patient
+│   │   │   └── DoctorConsultations.jsx← Consultations du médecin
+│   │   └── styles/
+│   │       ├── index.css              ← Variables CSS + styles globaux
+│   │       └── login.css              ← Styles pages authentification
+│   ├── global/
+│   │   ├── DashboardLayout.jsx        ← Layout avec sidebar responsive
+│   │   ├── Sidebar.jsx                ← Navigation latérale par rôle
+│   │   ├── PrivateRoute.jsx           ← Garde d'accès par rôle
+│   │   └── security.js               ← SecurityService (getUserRole)
+│   ├── hooks/
+│   │   └── useAuth.js                 ← Hook global état authentification
+│   └── App.jsx                        ← Point d'entrée React
+├── supabase/
+│   └── FIX_PRESENTATION.sql           ← Script SQL définitif (unique)
+└── vite.config.js                     ← Config Vite + alias @
+</pre>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 4. BASE DE DONNÉES -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">🗄️</span> 4. Structure de la Base de Données</div>
+
+      <div class="sub-title">Tables principales</div>
+      <table>
+        <thead><tr><th>Table</th><th>Colonnes principales</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>profiles</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id (UUID), full_name, email, phone, role, avatar_url</td>
+            <td>Profil de chaque utilisateur. Créé automatiquement via trigger à l'inscription.</td>
+          </tr>
+          <tr>
+            <td><code>patients</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, user_id (FK), date_of_birth, blood_type, medical_notes</td>
+            <td>Données médicales des patients. Lié à profiles via user_id.</td>
+          </tr>
+          <tr>
+            <td><code>doctors</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, user_id (FK), hospital_id, speciality_id, bio, is_verified</td>
+            <td>Informations des médecins. Lié à hospital et speciality.</td>
+          </tr>
+          <tr>
+            <td><code>hospitals</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, name, address, city, phone, email, description</td>
+            <td>Établissements hospitaliers enregistrés sur la plateforme.</td>
+          </tr>
+          <tr>
+            <td><code>specialities</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, name, icon, description</td>
+            <td>Spécialités médicales disponibles (Cardiologie, Pédiatrie, etc.)</td>
+          </tr>
+          <tr>
+            <td><code>appointments</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, patient_id, doctor_id, date, time, status, notes</td>
+            <td>Rendez-vous médicaux. Status: pending / confirmed / rejected / completed</td>
+          </tr>
+          <tr>
+            <td><code>consultations</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, appointment_id, doctor_id, patient_id, diagnosis, prescription</td>
+            <td>Comptes-rendus de consultation post-rendez-vous.</td>
+          </tr>
+          <tr>
+            <td><code>doctor_availability</code></td>
+            <td style="font-family:Consolas;font-size:11px;color:#374151;">id, doctor_id, day_of_week, start_time, end_time, is_available</td>
+            <td>Créneaux de disponibilité hebdomadaire du médecin.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title">Trigger d'inscription automatique (SECURITY DEFINER)</div>
+<pre>
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  -- 1. Créer le profil
+  INSERT INTO public.profiles (id, full_name, email, role)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'role', 'patient')
+  ) ON CONFLICT (id) DO NOTHING;
+
+  -- 2. Créer patient OU médecin selon le rôle
+  IF NEW.raw_user_meta_data->>'role' = 'doctor' THEN
+    INSERT INTO public.doctors (user_id)
+    VALUES (NEW.id) ON CONFLICT DO NOTHING;
+  ELSE
+    INSERT INTO public.patients (user_id)
+    VALUES (NEW.id) ON CONFLICT DO NOTHING;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+-- Déclenché après chaque création d'utilisateur
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+</pre>
+
+      <div class="sub-title">Politiques RLS — Principe</div>
+      <div class="card">
+        <p>Chaque table dispose de RLS activé. Le script <code>FIX_PRESENTATION.sql</code> supprime toutes les politiques
+        conflictuelles et recrée un set cohérent. Pour la présentation, des politiques ouvertes sont utilisées :</p>
+<pre>
+-- Politique ouverte (développement/présentation)
+CREATE POLICY "auth_all" ON appointments
+  FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- Politique restrictive recommandée (production)
+CREATE POLICY "patient_own" ON appointments
+  FOR SELECT TO authenticated
+  USING (patient_id = (SELECT id FROM patients WHERE user_id = auth.uid()));
+</pre>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 5. FONCTIONNALITÉS PAR RÔLE -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">👥</span> 5. Fonctionnalités par Rôle</div>
+
+      <!-- PATIENT -->
+      <div class="card-blue" style="margin-bottom:28px;">
+        <div class="role-header">
+          <div class="role-icon" style="background:#dbeafe;">🧑‍⚕️</div>
+          <div>
+            <h3 style="color:#1e40af;font-size:1.25rem;margin:0;">Rôle Patient</h3>
+            <p style="color:#3b82f6;font-size:12.5px;margin:4px 0 0 0;">Accès via /dashboard — Inscription libre</p>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th style="background:#1e40af;">Fonctionnalité</th><th style="background:#1e40af;">Page</th><th style="background:#1e40af;">Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Tableau de bord</strong></td><td><code>/dashboard</code></td><td>Vue d'ensemble: prochain RDV, statistiques, médecins récents</td></tr>
+            <tr><td><strong>Prendre un RDV</strong></td><td><code>/appointments</code></td><td>Recherche médecins par spécialité, sélection créneau, confirmation</td></tr>
+            <tr><td><strong>Mes médecins</strong></td><td><code>/my-doctors</code></td><td>Liste des médecins avec qui le patient a eu des rendez-vous</td></tr>
+            <tr><td><strong>Historique médical</strong></td><td><code>/history</code></td><td>Historique de tous les RDV et consultations passés</td></tr>
+            <tr><td><strong>Mon profil</strong></td><td><code>/profile</code></td><td>Modification des informations personnelles et médicales</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DOCTOR -->
+      <div class="card-green" style="margin-bottom:28px;">
+        <div class="role-header">
+          <div class="role-icon" style="background:#dcfce7;">👨‍⚕️</div>
+          <div>
+            <h3 style="color:#15803d;font-size:1.25rem;margin:0;">Rôle Médecin</h3>
+            <p style="color:#16a34a;font-size:12.5px;margin:4px 0 0 0;">Accès via /doctor-dashboard — Inscription avec hôpital + spécialité</p>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th style="background:#15803d;">Fonctionnalité</th><th style="background:#15803d;">Page</th><th style="background:#15803d;">Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Tableau de bord</strong></td><td><code>/doctor-dashboard</code></td><td>Statistiques: RDV du jour, patients, revenus, créneaux à venir</td></tr>
+            <tr><td><strong>Mon agenda</strong></td><td><code>/schedule</code></td><td>Calendrier hebdomadaire, confirmation/rejet des RDV en attente</td></tr>
+            <tr><td><strong>Mes patients</strong></td><td><code>/my-patients</code></td><td>Liste complète des patients avec compteur de RDV, recherche</td></tr>
+            <tr><td><strong>Dossier patient</strong></td><td><code>/patient-details/:id</code></td><td>Historique complet des RDV et consultations d'un patient</td></tr>
+            <tr><td><strong>Consultations</strong></td><td><code>/consultations</code></td><td>Rédiger et consulter les compte-rendus de consultation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="card-red">
+        <div class="role-header">
+          <div class="role-icon" style="background:#fee2e2;">🛡️</div>
+          <div>
+            <h3 style="color:#b91c1c;font-size:1.25rem;margin:0;">Rôle Administrateur</h3>
+            <p style="color:#dc2626;font-size:12.5px;margin:4px 0 0 0;">Accès via /admin/login — Portail restreint avec code secret</p>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th style="background:#b91c1c;">Onglet</th><th style="background:#b91c1c;">Route / Accès</th><th style="background:#b91c1c;">Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Vue d'ensemble</strong></td><td><code>/admin-dashboard</code></td><td>KPIs: total users, médecins, patients, RDV. Derniers enregistrements.</td></tr>
+            <tr><td><strong>Utilisateurs</strong></td><td>Onglet 2</td><td>Liste complète de tous les utilisateurs avec rôle et statut</td></tr>
+            <tr><td><strong>Médecins</strong></td><td>Onglet 3</td><td>Gestion des médecins: vérification, spécialité, hôpital</td></tr>
+            <tr><td><strong>Patients</strong></td><td>Onglet 4</td><td>Liste patients avec groupe sanguin et notes médicales</td></tr>
+            <tr><td><strong>Rendez-vous</strong></td><td>Onglet 5</td><td>Supervision globale de tous les RDV avec statuts</td></tr>
+            <tr><td><strong>Sécurité</strong></td><td>Onglet 6</td><td>Journal des connexions admin, activité suspecte</td></tr>
+            <tr><td><strong>Spécialités</strong></td><td>Onglet 7</td><td>CRUD des spécialités médicales disponibles</td></tr>
+            <tr><td><strong>Paramètres</strong></td><td>Onglet 8</td><td>Configuration de la plateforme</td></tr>
+            <tr><td><strong>Connexion Admin</strong></td><td><code>/admin/login</code></td><td>Page dédiée thème rouge, vérifie role === 'admin' strictement</td></tr>
+            <tr><td><strong>Inscription Admin</strong></td><td><code>/admin/register</code></td><td>Formulaire protégé par code secret: <strong>WERGUI-ADMIN-2026</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 6. ROUTES -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">🗺️</span> 6. Pages et Routes de l'Application</div>
+      <table>
+        <thead><tr><th>Route</th><th>Composant</th><th>Accès</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>/</code></td><td>→ /login</td><td>Public</td><td>Redirection automatique</td></tr>
+          <tr><td><code>/login</code></td><td>Login</td><td>Public</td><td>Connexion patient/médecin</td></tr>
+          <tr><td><code>/register</code></td><td>Register</td><td>Public</td><td>Inscription avec choix du rôle</td></tr>
+          <tr><td><code>/admin/login</code></td><td>AdminLogin</td><td>Public</td><td>Portail admin sécurisé (thème rouge)</td></tr>
+          <tr><td><code>/admin/register</code></td><td>AdminRegister</td><td>Public</td><td>Création compte admin (code secret requis)</td></tr>
+          <tr><td><code>/dashboard</code></td><td>PatientPortal</td><td><span class="tag">Patient</span></td><td>Accueil patient</td></tr>
+          <tr><td><code>/appointments</code></td><td>Appointments</td><td><span class="tag">Patient</span></td><td>Prise de rendez-vous</td></tr>
+          <tr><td><code>/my-doctors</code></td><td>MyDoctors</td><td><span class="tag">Patient</span></td><td>Mes médecins</td></tr>
+          <tr><td><code>/history</code></td><td>PatientHistory</td><td><span class="tag">Patient</span></td><td>Historique médical</td></tr>
+          <tr><td><code>/profile</code></td><td>PatientProfile</td><td><span class="tag">Patient</span></td><td>Mon profil</td></tr>
+          <tr><td><code>/doctor-dashboard</code></td><td>DoctorDashboard</td><td><span class="tag-green">Médecin</span></td><td>Accueil médecin</td></tr>
+          <tr><td><code>/schedule</code></td><td>DoctorSchedule</td><td><span class="tag-green">Médecin</span></td><td>Mon agenda</td></tr>
+          <tr><td><code>/my-patients</code></td><td>DoctorPatients</td><td><span class="tag-green">Médecin</span></td><td>Mes patients</td></tr>
+          <tr><td><code>/patient-details/:id</code></td><td>PatientDetails</td><td><span class="tag-green">Médecin</span></td><td>Dossier détaillé patient</td></tr>
+          <tr><td><code>/consultations</code></td><td>DoctorConsultations</td><td><span class="tag-green">Médecin</span></td><td>Mes consultations</td></tr>
+          <tr><td><code>/admin-dashboard</code></td><td>AdminDashboard</td><td><span class="tag-red">Admin</span></td><td>Console administration (8 onglets)</td></tr>
+          <tr><td><code>/admin-profile</code></td><td>AdminProfile</td><td><span class="tag-red">Admin</span></td><td>Profil administrateur</td></tr>
+          <tr><td><code>/*</code></td><td>→ /login</td><td>Public</td><td>Fallback 404 → login</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 7. SÉCURITÉ -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">🔐</span> 7. Sécurité et Authentification</div>
+
+      <div class="grid-2" style="margin-bottom:24px;">
+        <div class="card-green">
+          <h4 style="margin:0 0 12px 0;color:#15803d;">✅ Mesures en place</h4>
+          <ul>
+            <li>JWT Tokens via Supabase Auth</li>
+            <li>Row Level Security sur toutes les tables</li>
+            <li>PrivateRoute React avec vérification du rôle</li>
+            <li>Portail admin séparé + code secret d'accès</li>
+            <li>Rejet des comptes non-admin sur le portail admin</li>
+            <li>SECURITY DEFINER pour les triggers DB</li>
+            <li>Validation côté frontend (email, longueur MDP)</li>
+            <li>Confirmation de mot de passe à l'inscription</li>
+          </ul>
+        </div>
+        <div class="card-orange">
+          <h4 style="margin:0 0 12px 0;color:#c2410c;">⚠️ Recommandations prod</h4>
+          <ul>
+            <li>Renforcer les politiques RLS par user_id</li>
+            <li>Migrer le code secret admin vers variables d'env</li>
+            <li>Activer la vérification email Supabase</li>
+            <li>Rate limiting sur les tentatives de connexion</li>
+            <li>Mettre en place des logs d'audit</li>
+            <li>HTTPS forcé (déjà géré par Vercel)</li>
+            <li>Scan OWASP avant mise en production</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-title">Composant PrivateRoute</div>
+<pre>
+// src/global/PrivateRoute.jsx
+const PrivateRoute = ({ children, requiredRoles }) => {
+  const { user, role, loading } = useAuth();
+
+  if (loading) return &lt;LoadingSpinner /&gt;;
+
+  // Non connecté → redirection vers login
+  if (!user) return &lt;Navigate to="/login" replace /&gt;;
+
+  // Rôle non autorisé → redirection vers login
+  if (requiredRoles &amp;&amp; !requiredRoles.includes(role))
+    return &lt;Navigate to="/login" replace /&gt;;
+
+  return children;
+};
+</pre>
+
+      <div class="sub-title">SecurityService — Résolution du rôle</div>
+<pre>
+// src/global/security.js
+export const SecurityService = {
+  getUserRole: async (user) => {
+    // 1. Vérifier user_metadata (le plus rapide, sans requête DB)
+    const metaRole = user?.user_metadata?.role;
+    if (metaRole) return metaRole;
+
+    // 2. Fallback: chercher dans la table profiles
+    const { data } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    return data?.role || 'patient';
+  }
+}
+</pre>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 8. PROBLÈMES RÉSOLUS -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">🔧</span> 8. Problèmes Résolus &amp; Décisions Techniques</div>
+
+      <div class="issue-card" style="background:#fef2f2;border-color:#b91c1c;">
+        <div class="issue-header">
+          <strong style="color:#b91c1c;font-size:0.95rem;">Timeout à l'inscription — Erreur {} vide</strong>
+          <span class="issue-badge" style="background:#b91c1c;">Critique</span>
+        </div>
+        <p><strong>Cause racine:</strong> Le trigger PostgreSQL utilisait <code>ON CONFLICT (user_id)</code> mais les tables
+        <code>patients</code> et <code>doctors</code> n'avaient aucune contrainte <code>UNIQUE</code> sur la colonne
+        <code>user_id</code>. PostgreSQL lançait une erreur interne silencieuse que Supabase retournait sous forme d'objet vide <code>{}</code>.</p>
+        <p><strong>Correction:</strong> Ajout des contraintes <code>UNIQUE</code> via <code>ALTER TABLE</code>. Remplacement de
+        <code>ON CONFLICT</code> par <code>IF NOT EXISTS</code> dans le trigger. Ajout d'un fallback upsert manuel côté frontend.</p>
+      </div>
+
+      <div class="issue-card" style="background:#fff7ed;border-color:#c2410c;">
+        <div class="issue-header">
+          <strong style="color:#c2410c;font-size:0.95rem;">Patients invisibles dans le dashboard médecin</strong>
+          <span class="issue-badge" style="background:#c2410c;">Majeur</span>
+        </div>
+        <p><strong>Cause racine:</strong> 17 fichiers SQL successifs avaient créé des politiques RLS contradictoires et en conflit.
+        Certaines politiques se bloquaient mutuellement, rendant les jointures entre tables impossibles.</p>
+        <p><strong>Correction:</strong> Suppression de toutes les politiques via une boucle sur <code>pg_policies</code>.
+        Recréation d'un set unique de politiques cohérentes dans un seul fichier <code>FIX_PRESENTATION.sql</code>.</p>
+      </div>
+
+      <div class="issue-card" style="background:#eff6ff;border-color:#1d4ed8;">
+        <div class="issue-header">
+          <strong style="color:#1d4ed8;font-size:0.95rem;">Crash au login — SecurityService non importé</strong>
+          <span class="issue-badge" style="background:#1d4ed8;">Majeur</span>
+        </div>
+        <p><strong>Cause racine:</strong> <code>login.jsx</code> utilisait <code>SecurityService.getUserRole()</code> mais
+        l'import correspondant était absent, causant un <code>ReferenceError</code> au runtime.</p>
+        <p><strong>Correction:</strong> Ajout de <code>import &#123; SecurityService &#125; from '../../global/security'</code> dans login.jsx.</p>
+      </div>
+
+      <div class="issue-card" style="background:#f0fdf4;border-color:#15803d;">
+        <div class="issue-header">
+          <strong style="color:#15803d;font-size:0.95rem;">Crash DoctorPatients — Button antd non importé</strong>
+          <span class="issue-badge" style="background:#15803d;">Mineur</span>
+        </div>
+        <p><strong>Cause racine:</strong> Le composant utilisait <code>&lt;Button&gt;</code> d'Ant Design dans le JSX
+        mais il n'était pas inclus dans la déstructuration des imports.</p>
+        <p><strong>Correction:</strong> Ajout de <code>Button</code> dans la liste des imports Ant Design de <code>DoctorPatients.jsx</code>.</p>
+      </div>
+
+      <div class="issue-card" style="background:#f5f3ff;border-color:#7c3aed;">
+        <div class="issue-header">
+          <strong style="color:#7c3aed;font-size:0.95rem;">Crash adminDashboard — dayjs().fromNow() non défini</strong>
+          <span class="issue-badge" style="background:#7c3aed;">Majeur</span>
+        </div>
+        <p><strong>Cause racine:</strong> Le code utilisait <code>dayjs().fromNow()</code> qui requiert le plugin
+        <code>relativeTime</code> enregistré explicitement. Sans ce plugin, la méthode n'existe pas → <code>TypeError</code>.</p>
+        <p><strong>Correction:</strong> Remplacement de toutes les occurrences de <code>.fromNow()</code> par
+        <code>.format('DD/MM/YYYY HH:mm')</code>.</p>
+      </div>
+
+      <div class="issue-card" style="background:#f8fafc;border-color:#64748b;">
+        <div class="issue-header">
+          <strong style="color:#64748b;font-size:0.95rem;">17 fichiers SQL conflictuels → 1 fichier définitif</strong>
+          <span class="issue-badge" style="background:#64748b;">Architectural</span>
+        </div>
+        <p><strong>Cause racine:</strong> Accumulation de scripts SQL successifs (01_extensions, NUCLEAR_CLEANUP_FIX,
+        ULTIMATE_RLS_FIX, FINAL_DATABASE_HARDENING, etc.) créant des politiques contradictoires.</p>
+        <p><strong>Correction:</strong> Suppression de tous les anciens fichiers. Création de
+        <code>supabase/FIX_PRESENTATION.sql</code> — script unique et idempotent couvrant toutes les étapes.</p>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 9. FLUX UTILISATEUR -->
+    <div class="section pb">
+      <div class="section-title"><span class="section-icon">🔄</span> 9. Schéma des Flux Utilisateur</div>
+
+      <div class="sub-title">Flux Patient — Prendre un rendez-vous</div>
+<pre>
+[Inscription /register]  →  Choisir rôle "Patient"
+    │
+    ▼
+[Connexion /login]  →  Redirection automatique → /dashboard
+    │
+    ▼
+[Dashboard /dashboard]  →  Clic "Prendre un rendez-vous"
+    │
+    ▼
+[Appointments /appointments]
+    ├─ Filtrer par spécialité / hôpital
+    ├─ Sélectionner un médecin disponible
+    ├─ Choisir une date et un horaire
+    └─ Confirmer → INSERT INTO appointments (status: 'pending')
+                           │
+                           ▼
+             Médecin voit le RDV dans son agenda
+             → CONFIRMER / REJETER → UPDATE appointments.status
+</pre>
+
+      <div class="sub-title">Flux Médecin — Gérer les rendez-vous</div>
+<pre>
+[Inscription /register]  →  Choisir "Médecin" + hôpital + spécialité
+    │
+    ▼
+[Connexion /login]  →  Redirection automatique → /doctor-dashboard
+    │
+    ▼
+[Dashboard]  →  Statistiques du jour + prochains RDV
+    │
+    ├── [/schedule] Agenda
+    │       ├── RDV en attente (pending)
+    │       │       ├── CONFIRMER  ─────────► status: 'confirmed'
+    │       │       └── REJETER    ─────────► status: 'rejected'
+    │       └── Vue calendrier hebdomadaire
+    │
+    └── [/my-patients] Mes Patients
+            └── [/patient-details/:id] Dossier complet du patient
+</pre>
+
+      <div class="sub-title">Flux Admin — Supervision et configuration</div>
+<pre>
+[/admin/register]  →  Entrer code secret: WERGUI-ADMIN-2026
+    │
+    ▼
+[/admin/login]  →  Vérification role === 'admin' (rejet si patient/médecin)
+    │
+    ▼
+[Console Admin /admin-dashboard — 8 onglets]
+    ├── Onglet 1: Overview — KPIs globaux
+    ├── Onglet 2: Users — liste complète
+    ├── Onglet 3: Doctors — gestion + vérification
+    ├── Onglet 4: Patients — données médicales
+    ├── Onglet 5: Appointments — supervision globale
+    ├── Onglet 6: Security — logs d'accès
+    ├── Onglet 7: Specialties — CRUD spécialités
+    └── Onglet 8: Settings — configuration plateforme
+</pre>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- 10. DÉPLOIEMENT -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">🚀</span> 10. Déploiement et Configuration</div>
+
+      <div class="grid-2">
+        <div>
+          <div class="sub-title">Variables d'environnement (.env)</div>
+<pre>
+# Ne jamais committer ce fichier
+VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGci...
+</pre>
+          <div class="sub-title">Configuration Vercel (vercel.json)</div>
+<pre>
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
+</pre>
+        </div>
+        <div>
+          <div class="sub-title">Configuration Vite</div>
+<pre>
+// vite.config.js
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: { '@': '/src' }
+  }
+})
+</pre>
+          <div class="sub-title">Commandes de développement</div>
+<pre>
+npm run dev      # Développement local
+npm run build    # Build production
+npm run preview  # Prévisualisation build
+</pre>
+        </div>
+      </div>
+
+      <div class="sub-title">Configuration Supabase requise</div>
+      <div class="card">
+        <ul>
+          <li style="margin-bottom:10px;"><strong>Auth → Email Confirmations:</strong> <span class="tag-red">DÉSACTIVÉ</span> — évite le timeout à l'inscription</li>
+          <li style="margin-bottom:10px;"><strong>Auth → URL de site:</strong> URL de production Vercel configurée dans les paramètres Auth</li>
+          <li style="margin-bottom:10px;"><strong>SQL Editor:</strong> Exécuter <code>supabase/FIX_PRESENTATION.sql</code> une seule fois après nettoyage</li>
+          <li style="margin-bottom:10px;"><strong>RLS:</strong> Activé sur toutes les tables (géré automatiquement dans le script SQL)</li>
+          <li><strong>Trigger:</strong> <code>handle_new_user()</code> actif sur <code>auth.users AFTER INSERT</code></li>
+        </ul>
+      </div>
+
+      <div class="sub-title">Spécialités médicales pré-configurées (10)</div>
+      <div style="margin-bottom:16px;">
+        <span class="tag-green">Cardiologie</span>
+        <span class="tag-green">Pédiatrie</span>
+        <span class="tag-green">Dermatologie</span>
+        <span class="tag-green">Neurologie</span>
+        <span class="tag-green">Ophtalmologie</span>
+        <span class="tag-green">Gynécologie</span>
+        <span class="tag-green">Orthopédie</span>
+        <span class="tag-green">Psychiatrie</span>
+        <span class="tag-green">Radiologie</span>
+        <span class="tag-green">Médecine Générale</span>
+      </div>
+
+      <div class="sub-title">Checklist avant présentation</div>
+      <div class="card-green">
+        <ul>
+          <li>✅ Script <code>FIX_PRESENTATION.sql</code> exécuté sur Supabase</li>
+          <li>✅ Email confirmation désactivé dans Supabase Auth</li>
+          <li>✅ Au moins 1 hôpital et 1 spécialité en base</li>
+          <li>✅ Compte patient de test créé</li>
+          <li>✅ Compte médecin de test créé avec spécialité</li>
+          <li>✅ Compte admin créé via <code>/admin/register</code> avec le code secret</li>
+          <li>✅ Variables d'environnement configurées sur Vercel</li>
+          <li>✅ Build de production déployé et testé</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-logo">
+        <div class="footer-icon">🏥</div>
+        <strong style="color:#1a365d;font-size:1.1rem;">WerguiYaram</strong>
+        <span style="color:#cbd5e1;">|</span>
+        <span>Plateforme Médicale — Sénégal</span>
+      </div>
+      <p style="margin-bottom:4px;">Rapport généré le 16 Mars 2026 · Version 1.0.0</p>
+      <p>Stack: React 19 + Vite + Ant Design + Supabase · Déployé sur Vercel</p>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end page-wrapper -->
+
+</body>
+</html>

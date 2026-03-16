@@ -198,7 +198,7 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: role === 'doctor' ? '1fr 1fr' : '1fr', gap: '20px' }}>
+                    <div className="register-grid" style={{ display: 'grid', gridTemplateColumns: role === 'doctor' ? '1fr 1fr' : '1fr', gap: '20px' }}>
                         <div>
                             <label style={{ display: 'block', color: 'rgba(255,255,255,0.7)', marginBottom: '0.5rem', fontSize: '14px' }}>Nom complet</label>
                             <input

@@ -62,9 +62,9 @@ const DashboardLayout = ({ children }) => {
 
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             
-            <main style={{ 
-                flex: 1, 
-                marginLeft: 'var(--sidebar-width)', 
+            <main className="dashboard-main" style={{
+                flex: 1,
+                marginLeft: 'var(--sidebar-width)',
                 padding: '32px',
                 transition: 'all 0.3s ease',
                 marginTop: 0
@@ -72,14 +72,20 @@ const DashboardLayout = ({ children }) => {
                 <style>
                     {`
                         @media (max-width: 1024px) {
-                            main { 
-                                margin-left: 0 !important; 
+                            .dashboard-main {
+                                margin-left: 0 !important;
                                 padding-top: calc(var(--header-height) + 20px) !important;
                                 padding-left: 16px !important;
                                 padding-right: 16px !important;
                                 padding-bottom: 32px !important;
                             }
                             .sidebar-desktop { display: none !important; }
+                        }
+                        @media (max-width: 480px) {
+                            .dashboard-main {
+                                padding-left: 12px !important;
+                                padding-right: 12px !important;
+                            }
                         }
                     `}
                 </style>

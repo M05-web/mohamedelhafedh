@@ -107,23 +107,120 @@ h1, h2, h3, h4, .premium-title {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-/* Responsive Overrides */
-@media (max-width: 1025px) {
+/* ═══════════════════════════════════════════
+   RESPONSIVE OVERRIDES — ALL BREAKPOINTS
+   ═══════════════════════════════════════════ */
+
+/* ── Desktop sidebar hide on tablet/mobile ── */
+@media (max-width: 1024px) {
     .sidebar-desktop { display: none !important; }
 }
 
-@media (max-width: 768px) {
-    .container { padding: 0 1rem; }
-    h1 { font-size: 2rem !important; }
-    
-    .mobile-only { display: block !important; }
-    .desktop-only { display: none !important; }
-    
-    .p-mobile-0 { padding: 0 !important; }
-    .m-mobile-0 { margin: 0 !important; }
-    .hidden-mobile { display: none !important; }
+/* ── Tablet (≤ 1024px) ── */
+@media (max-width: 1024px) {
+    .container { padding: 0 1.25rem; }
 }
 
+/* ── Mobile (≤ 768px) ── */
+@media (max-width: 768px) {
+    .container { padding: 0 1rem; }
+
+    /* Typography scale-down */
+    h1 { font-size: 1.75rem !important; }
+    h2 { font-size: 1.4rem !important; }
+    h3 { font-size: 1.15rem !important; }
+
+    /* Visibility utilities */
+    .mobile-only  { display: block !important; }
+    .desktop-only { display: none  !important; }
+    .hidden-mobile { display: none !important; }
+
+    /* Spacing utilities */
+    .p-mobile-0 { padding: 0 !important; }
+    .m-mobile-0 { margin:  0 !important; }
+
+    /* ── Ant Design Modal — full-width on mobile ── */
+    .ant-modal { max-width: 95vw !important; width: 95vw !important; margin: 8px auto !important; }
+    .ant-modal-content { border-radius: 16px !important; }
+    .ant-modal-body { padding: 16px !important; }
+
+    /* ── Ant Design Table — horizontal scroll ── */
+    .ant-table-wrapper { overflow-x: auto !important; }
+    .ant-table { min-width: 540px; }
+
+    /* ── Ant Design Tabs — scrollable labels ── */
+    .ant-tabs-nav-wrap { overflow-x: auto !important; }
+    .ant-tabs-nav-list { flex-wrap: nowrap !important; }
+    .ant-tabs-tab { white-space: nowrap !important; padding: 8px 12px !important; font-size: 13px !important; }
+
+    /* ── Ant Design List.Item actions — stack vertically ── */
+    .ant-list-item { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+    .ant-list-item-action { margin-left: 0 !important; width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
+    .ant-list-item-action li { padding: 0 !important; }
+
+    /* ── Ant Design Card body padding ── */
+    .ant-card-body { padding: 16px !important; }
+
+    /* ── Ant Design Statistic ── */
+    .ant-statistic-content-value { font-size: 1.6rem !important; }
+
+    /* ── Dashboard pages: top-level padding ── */
+    [style*="padding: '20px'"],
+    [style*="padding: 20px"] { padding: 12px !important; }
+
+    /* ── Doctor/Patient dashboard headers ── */
+    .dash-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 16px !important;
+    }
+    .dash-header-row .dash-header-actions {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .dash-header-row .dash-header-actions button,
+    .dash-header-row .dash-header-actions .ant-btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+
+    /* ── Register grid — always single column ── */
+    .register-grid { grid-template-columns: 1fr !important; }
+    .register-grid [style*="gridColumn: 'span 2'"],
+    .register-grid [style*="gridColumn: \"span 2\""] { grid-column: span 1 !important; }
+
+    /* ── DoctorPatients search bar ── */
+    .doctor-patients-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+    }
+    .doctor-patients-header .ant-input-affix-wrapper { width: 100% !important; }
+
+    /* ── DashboardLayout main padding ── */
+    .dashboard-main { padding: 16px !important; }
+}
+
+/* ── Small mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+    h1 { font-size: 1.5rem !important; }
+    h2 { font-size: 1.25rem !important; }
+
+    .ant-modal { max-width: 100vw !important; width: 100vw !important; margin: 0 !important; top: auto !important; bottom: 0; }
+    .ant-modal-content { border-radius: 20px 20px 0 0 !important; }
+
+    .ant-btn-lg { height: 44px !important; font-size: 14px !important; }
+
+    /* Stat numbers */
+    .ant-statistic-content-value { font-size: 1.4rem !important; }
+
+    /* Remove hover lift on touch */
+    .hover-lift:hover { transform: none !important; }
+}
+
+/* ── min-width ── */
 @media (min-width: 769px) {
     .mobile-only { display: none !important; }
 }

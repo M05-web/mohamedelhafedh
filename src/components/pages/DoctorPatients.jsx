@@ -69,7 +69,7 @@ const DoctorPatients = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div className="doctor-patients-header" style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                     <h1 style={{ fontSize: '2.5rem', color: '#1a365d', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>
                         Mes <span style={{ color: 'var(--primary)' }}>Patients</span>

@@ -828,7 +828,7 @@ const AdminDashboard = () => {
                     setSelectedPatient(null);
                 }}
                 footer={null}
-                width={800}
+                width="min(800px, 95vw)"
                 centered
                 destroyOnClose
             >
@@ -874,7 +874,7 @@ const AdminDashboard = () => {
                     setEditingUser(null);
                 }}
                 footer={null}
-                width={500}
+                width="min(500px, 95vw)"
                 centered
                 destroyOnClose
             >

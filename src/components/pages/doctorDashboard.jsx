@@ -132,9 +132,9 @@ const DoctorDashboard = () => {
                         <List.Item
                             style={{ padding: '1.5rem', borderRadius: '15px', background: '#f8fafc', marginBottom: '1rem', border: '1px solid transparent' }}
                             actions={[
-                                item.status === 'pending' && <Button type="primary" className="btn-premium" ghost onClick={() => updateStatus(item.id, 'confirmed')}>Confirmer</Button>,
-                                item.status === 'confirmed' && <Button type="primary" className="btn-premium" icon={<FormOutlined />} onClick={() => { setSelectedAppt(item); setConsultationModalOpen(true); }}>Consulter</Button>,
-                                item.status === 'pending' && <Button danger ghost className="btn-premium" onClick={() => updateStatus(item.id, 'cancelled')}>Refuser</Button>
+                                item.status === 'pending' && <Button type="primary" className="btn-premium" ghost size="small" onClick={() => updateStatus(item.id, 'confirmed')}>Confirmer</Button>,
+                                item.status === 'confirmed' && <Button type="primary" className="btn-premium" icon={<FormOutlined />} size="small" onClick={() => { setSelectedAppt(item); setConsultationModalOpen(true); }}>Consulter</Button>,
+                                item.status === 'pending' && <Button danger ghost className="btn-premium" size="small" onClick={() => updateStatus(item.id, 'cancelled')}>Refuser</Button>
                             ]}
                         >
                             <List.Item.Meta
@@ -169,14 +169,14 @@ const DoctorDashboard = () => {
 
     return (
         <div style={{ paddingBottom: '4rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem' }}>
+            <div className="dash-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                     <h1 style={{ fontSize: '2.5rem', color: '#1a365d', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>
                         Cabinet Médical <span style={{ color: 'var(--primary)' }}>Digital</span>
                     </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Gérez vos consultations et votre emploi du temps avec précision.</p>
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div className="dash-header-actions" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     <Button icon={<BellOutlined />} style={{ height: '48px', width: '48px', borderRadius: '12px', border: 'none', background: 'white' }} />
                     <Button type="primary" className="btn-premium btn-primary" style={{ height: '48px', borderRadius: '12px' }}>
                         Urgences (0)
@@ -212,7 +212,7 @@ const DoctorDashboard = () => {
                     <Button key="back" onClick={() => setConsultationModalOpen(false)} style={{ borderRadius: '10px', height: '45px' }}>Annuler</Button>,
                     <Button key="submit" type="primary" onClick={handleConsultationSubmit} className="btn-premium" style={{ borderRadius: '10px', height: '45px' }}>Enregistrer & Fermer</Button>
                 ]}
-                width={800}
+                width="min(800px, 95vw)"
                 centered
             >
                 <div style={{ padding: '20px 0' }}>

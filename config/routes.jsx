@@ -30,7 +30,7 @@ const RouteConfig = () => {
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* Patient Routes */}
             <Route
                 path="/dashboard"
