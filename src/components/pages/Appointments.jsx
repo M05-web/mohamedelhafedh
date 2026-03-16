@@ -154,45 +154,34 @@ const Appointments = () => {
                                 }}
                                 bodyStyle={{ padding: '24px' }}
                             >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
-                                    <div style={{ display: 'flex', gap: '20px' }}>
-                                        <Avatar 
-                                            size={64} 
-                                            style={{ background: '#eff6ff', color: 'var(--primary)' }}
-                                            icon={<MedicineBoxOutlined />}
-                                        />
-                                        <div>
-                                            <Title level={4} style={{ margin: 0, color: '#1a365d', fontWeight: 700 }}>
+                                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                                    <Avatar
+                                        size={52}
+                                        style={{ background: '#eff6ff', color: 'var(--primary)', flexShrink: 0 }}
+                                        icon={<MedicineBoxOutlined />}
+                                    />
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '6px' }}>
+                                            <Title level={4} style={{ margin: 0, color: '#1a365d', fontWeight: 700, fontSize: '1rem' }}>
                                                 Dr. {item.doctors?.profiles?.full_name}
                                             </Title>
-                                            <Tag color="blue" style={{ marginTop: '5px', borderRadius: '6px', border: 'none', fontWeight: 600 }}>
-                                                {item.doctors?.specialties?.name}
+                                            <Tag
+                                                color={getStatusColor(item.status)}
+                                                style={{ fontSize: '13px', padding: '2px 12px', borderRadius: '20px', fontWeight: 800, textTransform: 'uppercase', border: 'none', flexShrink: 0, margin: 0 }}
+                                            >
+                                                {getStatusLabel(item.status)}
                                             </Tag>
-                                            <div style={{ marginTop: '12px', display: 'flex', gap: '20px', color: '#64748b' }}>
-                                                <Space><CalendarOutlined /> {dayjs(item.appointment_date).format('DD MMMM YYYY')}</Space>
-                                                <Space><ClockCircleOutlined /> {item.appointment_time}</Space>
-                                            </div>
                                         </div>
-                                    </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <Tag 
-                                            color={getStatusColor(item.status)} 
-                                            style={{ 
-                                                fontSize: '14px', 
-                                                padding: '4px 15px', 
-                                                borderRadius: '20px', 
-                                                fontWeight: 800,
-                                                textTransform: 'uppercase',
-                                                border: 'none'
-                                            }}
-                                        >
-                                            {getStatusLabel(item.status)}
+                                        <Tag color="blue" style={{ borderRadius: '6px', border: 'none', fontWeight: 600, marginBottom: '8px' }}>
+                                            {item.doctors?.specialties?.name}
                                         </Tag>
-                                        <div style={{ marginTop: '15px' }}>
-                                            <Text type="secondary" style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
-                                                "{item.reason || 'Consultation de routine'}"
-                                            </Text>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', color: '#64748b', fontSize: '13px', marginBottom: '6px' }}>
+                                            <span><CalendarOutlined /> {dayjs(item.appointment_date).format('DD MMM YYYY')}</span>
+                                            <span><ClockCircleOutlined /> {item.appointment_time}</span>
                                         </div>
+                                        <Text type="secondary" style={{ fontStyle: 'italic', fontSize: '0.85rem' }}>
+                                            "{item.reason || 'Consultation de routine'}"
+                                        </Text>
                                     </div>
                                 </div>
                             </Card>

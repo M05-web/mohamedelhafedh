@@ -203,29 +203,32 @@ const Dashboard = () => {
                             </Button>
                         </div>
                         
-                        <List
-                            dataSource={appointments.filter(a => a.status === 'confirmed' || a.status === 'pending').slice(0, 3)}
-                            renderItem={item => (
-                                <List.Item style={{ border: 'none', background: '#f8fafc', borderRadius: '20px', padding: '1.5rem', marginBottom: '1.25rem', transition: 'all 0.3s ease' }} className="hover-lift">
-                                    <div style={{ display: 'flex', gap: '1.5rem', width: '100%', alignItems: 'center' }}>
-                                        <Avatar size={64} style={{ background: 'white', border: '2px solid var(--primary-light)', color: '#1a365d', fontWeight: '800' }}>
-                                            {item.doctors?.profiles?.full_name?.charAt(0)}
-                                        </Avatar>
-                                        <div style={{ flex: 1 }}>
-                                            <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#0f172a', fontWeight: '700' }}>Dr. {item.doctors?.profiles?.full_name}</h4>
-                                            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.95rem' }}>{item.doctors?.specialties?.name} • {dayjs(item.appointment_date).format('DD MMMM YYYY')}</p>
-                                        </div>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: '16px', fontWeight: '700', color: '#1a365d', marginBottom: '4px' }}>{item.appointment_time}</div>
-                                            <Tag color={item.status === 'confirmed' ? 'green' : 'orange'} style={{ borderRadius: '20px', padding: '2px 12px', border: 'none', fontWeight: '700' }}>
-                                                {item.status === 'confirmed' ? 'Confirmé' : 'À valider'}
-                                            </Tag>
-                                        </div>
+                        <style>{`
+                            .rdv-card { background: #f8fafc; border-radius: 20px; padding: 1.25rem; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: flex-start; border: 1px solid #e2e8f0; }
+                            .rdv-body { flex: 1; min-width: 0; }
+                            .rdv-name { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                            .rdv-sub { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                            .rdv-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+                        `}</style>
+                        {appointments.filter(a => a.status === 'confirmed' || a.status === 'pending').slice(0, 3).length === 0 ? (
+                            <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Aucun rendez-vous prévu pour le moment.</div>
+                        ) : appointments.filter(a => a.status === 'confirmed' || a.status === 'pending').slice(0, 3).map(item => (
+                            <div key={item.id} className="rdv-card">
+                                <Avatar size={52} style={{ background: 'white', border: '2px solid var(--primary-light)', color: '#1a365d', fontWeight: '800', flexShrink: 0 }}>
+                                    {item.doctors?.profiles?.full_name?.charAt(0)}
+                                </Avatar>
+                                <div className="rdv-body">
+                                    <p className="rdv-name">Dr. {item.doctors?.profiles?.full_name}</p>
+                                    <p className="rdv-sub">{item.doctors?.specialties?.name} • {dayjs(item.appointment_date).format('DD MMM YYYY')}</p>
+                                    <div className="rdv-footer">
+                                        <span style={{ fontSize: '14px', fontWeight: '700', color: '#1a365d' }}>{item.appointment_time}</span>
+                                        <Tag color={item.status === 'confirmed' ? 'green' : 'orange'} style={{ borderRadius: '20px', padding: '2px 12px', border: 'none', fontWeight: '700', margin: 0 }}>
+                                            {item.status === 'confirmed' ? 'Confirmé' : 'À valider'}
+                                        </Tag>
                                     </div>
-                                </List.Item>
-                            )}
-                            locale={{ emptyText: <div style={{ padding: '3rem', textAlign: 'center' }}>Aucun rendez-vous prévu pour le moment.</div> }}
-                        />
+                                </div>
+                            </div>
+                        ))}
 
                         {/* Consultation History */}
                         <div style={{ marginTop: '3rem' }}>

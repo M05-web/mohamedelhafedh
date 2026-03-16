@@ -125,39 +125,56 @@ const DoctorDashboard = () => {
             </Row>
 
             <Card style={{ borderRadius: '20px', border: 'none', boxShadow: 'var(--shadow-md)' }} title={<span style={{ fontFamily: 'Outfit', fontWeight: '700' }}>Flux de Patients & Rendez-vous</span>}>
-                <List
-                    itemLayout="horizontal"
-                    dataSource={appointments}
-                    renderItem={item => (
-                        <List.Item
-                            style={{ padding: '1.5rem', borderRadius: '15px', background: '#f8fafc', marginBottom: '1rem', border: '1px solid transparent' }}
-                            actions={[
-                                item.status === 'pending' && <Button type="primary" className="btn-premium" ghost size="small" onClick={() => updateStatus(item.id, 'confirmed')}>Confirmer</Button>,
-                                item.status === 'confirmed' && <Button type="primary" className="btn-premium" icon={<FormOutlined />} size="small" onClick={() => { setSelectedAppt(item); setConsultationModalOpen(true); }}>Consulter</Button>,
-                                item.status === 'pending' && <Button danger ghost className="btn-premium" size="small" onClick={() => updateStatus(item.id, 'cancelled')}>Refuser</Button>
-                            ]}
-                        >
-                            <List.Item.Meta
-                                avatar={<Avatar size={48} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontWeight: '700' }}>{item.patients?.profiles?.full_name?.charAt(0)}</Avatar>}
-                                title={<span style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1a365d' }}>{item.patients?.profiles?.full_name}</span>}
-                                description={
-                                    <div style={{ display: 'flex', gap: '20px', marginTop: '4px' }}>
-                                        <span style={{ color: 'var(--text-muted)' }}><CalendarOutlined /> {dayjs(item.appointment_date).format('DD MMM YYYY')}</span>
-                                        <span style={{ color: 'var(--text-muted)' }}><ClockCircleOutlined /> {item.appointment_time}</span>
-                                        <span style={{ color: 'var(--primary)', fontWeight: '600' }}>{item.reason || 'Consultation standard'}</span>
-                                    </div>
-                                }
-                            />
-                            <Tag color={
-                                item.status === 'confirmed' ? 'green' : 
-                                item.status === 'completed' ? 'blue' : 
-                                item.status === 'cancelled' ? 'red' : 'orange'
-                            } style={{ borderRadius: '20px', padding: '4px 16px', border: 'none', fontWeight: '700' }}>
-                                {item.status.toUpperCase()}
-                            </Tag>
-                        </List.Item>
-                    )}
-                />
+                <style>{`
+                    .appt-card { padding: 1.25rem; border-radius: 15px; background: #f8fafc; margin-bottom: 1rem; border: 1px solid #e2e8f0; }
+                    .appt-row { display: flex; align-items: flex-start; gap: 14px; }
+                    .appt-body { flex: 1; min-width: 0; }
+                    .appt-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+                    .appt-name { font-size: 1.05rem; font-weight: 700; color: #1a365d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                    .appt-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+                    .appt-reason { font-size: 13px; color: var(--primary); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+                    .appt-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+                    .appt-actions .ant-btn { flex: 1 1 auto; min-width: 90px; border-radius: 10px !important; }
+                `}</style>
+                {appointments.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Aucun rendez-vous pour le moment.</div>
+                ) : appointments.map(item => (
+                    <div key={item.id} className="appt-card">
+                        <div className="appt-row">
+                            <Avatar size={46} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontWeight: '700', flexShrink: 0 }}>
+                                {item.patients?.profiles?.full_name?.charAt(0)}
+                            </Avatar>
+                            <div className="appt-body">
+                                <div className="appt-top">
+                                    <span className="appt-name">{item.patients?.profiles?.full_name}</span>
+                                    <Tag color={
+                                        item.status === 'confirmed' ? 'green' :
+                                        item.status === 'completed' ? 'blue' :
+                                        item.status === 'cancelled' ? 'red' : 'orange'
+                                    } style={{ borderRadius: '20px', padding: '2px 12px', border: 'none', fontWeight: '700', flexShrink: 0 }}>
+                                        {item.status.toUpperCase()}
+                                    </Tag>
+                                </div>
+                                <div className="appt-meta">
+                                    <span><CalendarOutlined /> {dayjs(item.appointment_date).format('DD MMM YYYY')}</span>
+                                    <span><ClockCircleOutlined /> {item.appointment_time}</span>
+                                </div>
+                                <div className="appt-reason">{item.reason || 'Consultation standard'}</div>
+                                <div className="appt-actions">
+                                    {item.status === 'pending' && (
+                                        <Button type="primary" ghost onClick={() => updateStatus(item.id, 'confirmed')}>Confirmer</Button>
+                                    )}
+                                    {item.status === 'confirmed' && (
+                                        <Button type="primary" icon={<FormOutlined />} onClick={() => { setSelectedAppt(item); setConsultationModalOpen(true); }}>Consulter</Button>
+                                    )}
+                                    {item.status === 'pending' && (
+                                        <Button danger ghost onClick={() => updateStatus(item.id, 'cancelled')}>Refuser</Button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </Card>
         </>
     );
