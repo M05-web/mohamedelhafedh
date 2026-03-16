@@ -19,14 +19,15 @@ const DashboardLayout = ({ children }) => {
                 background: '#0f172a',
                 color: 'white',
                 display: 'flex',
+                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '0 20px',
+                padding: '0 16px',
                 zIndex: 1000,
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
             }}>
                 {/* Left: Hamburger */}
-                <button 
+                <button
                     onClick={() => setIsSidebarOpen(true)}
                     style={{
                         background: 'transparent',
@@ -37,10 +38,14 @@ const DashboardLayout = ({ children }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width: '40px'
+                        width: '40px',
+                        height: '40px',
+                        padding: 0,
+                        lineHeight: 1,
+                        flexShrink: 0,
                     }}
                 >
-                    <span style={{ display: 'flex' }}><MenuOutlined /></span>
+                    <MenuOutlined style={{ fontSize: '20px', display: 'block' }} />
                 </button>
 
                 {/* Center: Logo */}
