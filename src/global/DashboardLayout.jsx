@@ -49,13 +49,14 @@ const DashboardLayout = ({ children }) => {
                 </button>
 
                 {/* Center: Logo */}
-                <div style={{ 
+                <div style={{
                     position: 'absolute',
                     left: '50%',
-                    transform: 'translateX(-50%)',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '10px' 
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
                 }}>
                     <img src="/medical-logo.svg" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
                     <span style={{ fontWeight: '800', fontFamily: 'Outfit', fontSize: '1.2rem' }}>WerguiYaram</span>
